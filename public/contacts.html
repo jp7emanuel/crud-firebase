@@ -15,30 +15,32 @@
     </section>
 
     <section>
-        <pre class="col-md-12">{{ contacts | json }}</pre>
+        <pre>{{ contacts | json }}</pre>
         <article style="margin-bottom: 10px;">
             <header style="margin-bottom: 15px;">
                 <h1 class='text-center'>New Contact</h1>
             </header>    
-            <form ng-submit="saveContact()">
-                <p>
+            <form class="row" ng-submit="saveContact()">
+                <p class="col-md-6">
                     <label>First Name (required)</label> 
                     <input id="name" class="form-control" type="text" ng-model="newContact.firstName" required autofocus> 
                 </p>
-                <p>
+                <p class="col-md-6">
                     <label>Last Name (required)</label> 
                     <input id="name" class="form-control" type="text" ng-model="newContact.lastName" required> 
                 </p>
-                <p>
+                <p class="col-md-6">
                     <label>Email (required)</label> 
                     <input id="name" class="form-control" type="text" ng-model="newContact.email" required> 
                 </p>
-                <p>
+                <p class="col-md-6">
                     <label>Phone</label> 
                     <input id="name" class="form-control" type="text" ng-model="newContact.phone"> 
                 </p>
                 
-                <button class='btn btn-primary' type="submit">Save</button>                 
+                <div class="col-md-12">
+                    <button class='btn btn-primary' type="submit">Save</button>                 
+                </div>
             </form>
         </article>
         <article class="pull-right " ng-show="contacts.length > 0" >
