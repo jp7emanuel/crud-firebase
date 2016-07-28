@@ -1,0 +1,72 @@
+<div ng-controller="ContactsController">
+    <section>
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <div class="navbar-brand" href="#">JP7 Contact List</div>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <div class="navbar-form navbar-right">
+                        <button type="button" class="btn btn-danger" ng-click="logout()">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </section>
+
+    <section>
+        <pre class="col-md-12">{{ contacts | json }}</pre>
+        <article style="margin-bottom: 10px;">
+            <header class="col-md-12">
+                <h1 class='text-center'>New Contact</h1>
+            </header>    
+            <form ng-submit="saveContact()" class="col-md-12">
+                <p>
+                    <label>First Name (required)</label> 
+                    <input id="name" class="form-control" type="text" ng-model="newContact.firstName" required autofocus> 
+                </p>
+                <p>
+                    <label>Last Name (required)</label> 
+                    <input id="name" class="form-control" type="text" ng-model="newContact.lastName" required> 
+                </p>
+                <p>
+                    <label>Email (required)</label> 
+                    <input id="name" class="form-control" type="text" ng-model="newContact.email" required> 
+                </p>
+                <p>
+                    <label>Phone</label> 
+                    <input id="name" class="form-control" type="text" ng-model="newContact.phone"> 
+                </p>
+                
+                <button class='btn btn-primary' type="submit">Save</button>                 
+            </form>
+        </article>
+        <article ng-show="contacts.length > 0" style="padding-bottom: 100px">
+            <header class="col-md-12">
+                <h1 class='text-center'>All Contacts</h1>
+            </header>      
+            <div class="col-md-12">
+                <table class="table table-hover table-bordered">
+                    <tr>
+                        <th>#</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>email</th>
+                        <th>Phone</th>
+                        <th width="1%">Action</th>
+                    </tr>
+                    <tr ng-repeat="(key, contact) in contacts" style="cursor:pointer">
+                        <td>{{ key+1 }}</td>
+                        <td>{{ contact.firstName }}</td>
+                        <td>{{ contact.lastName }}</td>
+                        <td>{{ contact.email }}</td>
+                        <td>{{ contact.phone }}</td>
+                        <td width="1%">
+                           <button class="btn btn-danger" ng-click="removeContact(contact)">Delete</button>
+                        </td>
+                    </tr>
+                </table>                    
+            </div>          
+        </article>
+    </section>
+</div>
