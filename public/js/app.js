@@ -57,58 +57,129 @@ angular.module('testejp7App', ['firebase', 'ngRoute'])
                     }]
                 }
             })
+            .when("/signup", {
+                controller: "SignUpController",
+                templateUrl: "signup.html"
+            })
             .otherwise({
                 redirectTo: "/"
             })
     })
     .controller("LoginController", ["$scope", "Auth", "$location", 
         function($scope, Auth, $location) {
+            $scope.error = '';
+
             $scope.userLogin = function() {
+                
                 var loginCredentials = $scope.login;
                 if (!loginCredentials) {
+                    $scope.error = 'Todos os campos são obrigatórios';
                     return;
                 }
+
                 Auth.$signInWithEmailAndPassword(loginCredentials.email, loginCredentials.password).then(function(firebaseUser) {
                     console.log("Signed in as:", firebaseUser.uid);
                     $location.path("/contacts");
                 }).catch(function(error) {
-                    console.error("Authentication failed:", error);
+                    $scope.error = error.message;
                 });
+
+                //reset form values
                 $scope.login = '';
+            };
+
+            $scope.userLoginGoogle = function () {
+                Auth.$signInWithPopup("google").then(function(result) {
+                    console.log("Signed in as:", result.user.uid);
+                    $location.path("/contacts");
+                }).catch(function(error) {
+                    $scope.error = error.message;
+                });
+            };
+
+            $scope.userLoginGithub = function () {
+                Auth.$signInWithPopup("github").then(function(result) {
+                    console.log("Signed in as:", result.user.uid);
+                    $location.path("/contacts");
+                }).catch(function(error) {
+                    $scope.error = error.message;
+                });
+            };
+
+            $scope.userCreate = function () {
+                $location.path("/signup");
             };
         }
     ])
     .controller("ContactsController", ["$scope", "Contacts", "Auth", "$location",
         function ($scope, Contacts, Auth, $location) {
             $scope.contacts = Contacts("contacts");
+            $scope.error = '';
+            $scope.newContact = ''; 
 
             $scope.saveContact = function() {
                 var newContact = $scope.newContact;
                 if (!newContact) {
-                    return;
+                    return false;
                 }
-                // push to firebase
+
+                // data binding fodendo works
                 $scope.contacts.$add(newContact).then(function() {
                     alert('Contact saved!');
                 }).catch(function(error) {
-                    alert('Error!');
+                    $scope.error = error.message;
                 });
-                $scope.newContact = '';
             };
 
             $scope.removeContact = function(contact) {
+                // data binding fodendo works
                 $scope.contacts.$remove(contact).then(function() {
                     alert('Contact removed!');
                 }).catch(function(error) {
-                    alert('Error!');
+                    $scope.error = error.message;
                 });
             };
 
             $scope.logout = function () {
-                alert('Vlws flws');
                 $location.path("/");
-                Auth.$signOut();
+                Auth.$signOut().then(function () {
+                    alert('Vlws flws');
+                }).catch(function(error) {
+                    $scope.error = error.message;
+                });;
             }
+        }
+    ])
+    .controller("SignUpController", ["$scope", "Auth", "$location",
+        function ($scope, Auth, $location) {
+            $scope.error = '';
+
+            $scope.signUpUser = function () {
+                var signUpCredentials = $scope.signup;
+
+                if (!signUpCredentials) {
+                    $scope.error = 'Todos os campos são obrigatórios';
+                    return;
+                }
+
+                if (signUpCredentials.password != signUpCredentials.password_confirmation) {
+                    $scope.error = 'Password mismatch!';
+                    $scope.signup.password = '';
+                    $scope.signup.password_confirmation = '';
+                    return;
+                }
+                Auth.$createUserWithEmailAndPassword(signUpCredentials.email, signUpCredentials.password)
+                    .then(function(regUser) {
+                        alert("User " + regUser.uid + " created!");
+                        $location.path("/");
+                    }).catch(function(error) {
+                        $scope.error = error.message;
+                    });
+            };
+
+            $scope.back = function() {
+                $location.path("/");
+            };
         }
     ]);
 
