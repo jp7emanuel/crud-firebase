@@ -142,11 +142,7 @@ angular.module('testejp7App', ['firebase', 'ngRoute'])
 
             $scope.logout = function () {
                 $location.path("/");
-                Auth.$signOut().then(function () {
-                    alert('Vlws flws');
-                }).catch(function(error) {
-                    $scope.error = error.message;
-                });;
+                Auth.$signOut();
             }
         }
     ])
